@@ -1,5 +1,3 @@
--- Creates a trigger that toggles email validation
--- When email is changed trigger changes value at valid_email column
 DELIMITER $$
 CREATE TRIGGER validate_email
 BEFORE UPDATE ON users
