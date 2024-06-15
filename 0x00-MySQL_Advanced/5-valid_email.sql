@@ -1,3 +1,5 @@
+-- Toogle valid_email column
+-- Create trigger that switches valid_email when email is updated
 DELIMITER $$
 CREATE TRIGGER validate_email
 BEFORE UPDATE ON users
