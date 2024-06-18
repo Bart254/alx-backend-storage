@@ -19,4 +19,4 @@ def update_topics(mongo_collection, name, topics):
         topics(list of strings): the topics to be updated in the document
     """
     # update document matching the name description
-    mongo_collection.update({"name": name}, {$set: {"topics": topics}})
+    mongo_collection.update_many({"name": name}, {$set: {"topics": topics}})
