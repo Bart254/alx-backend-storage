@@ -18,6 +18,7 @@ class Cache:
         """ stores an instance of Redis client in a private attribute
         """
         self.__redis = redis.Redis()
+        self.__redis.flushdb()
 
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """ generates a key and stores data passed as argument
