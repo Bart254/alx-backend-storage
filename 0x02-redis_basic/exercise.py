@@ -6,14 +6,14 @@ from typing import Union, Optional, Callable, List, Dict
 from functools import wraps
 
 
-def count_calls(func: Callable) -> Callable:
+def count_calls(method: Callable) -> Callable:
     """ function decorator"""
-    @wraps(func)
+    @wraps(method)
     def incr(self, *args: List, **kwargs: Dict) -> Callable:
         """ increments count for func key"""
-        key = func.__qualname__
+        key = method.__qualname__
         self._redis.incr(key)
-        return func(self, *args, **kwargs)
+        return method(self, *args, **kwargs)
     return incr
 
 
