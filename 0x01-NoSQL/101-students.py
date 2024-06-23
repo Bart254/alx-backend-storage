@@ -18,9 +18,8 @@ def top_students(mongo_collection):
         },
         {
             "$group": {
-                "_id": "$_id",
+                "_id": {"id": "$_id", "name": "$name"},
                 "averageScore": {"$avg": "$topics.score"},
-                "name": {"$addToSet": "$name"}
             }
         },
         {
@@ -30,9 +29,9 @@ def top_students(mongo_collection):
         },
         {
             "$project": {
-                "_id": 1,
+                "_id": "$_id.id",
                 "averageScore": 1,
-                "name": {"$first": "$name"}
+                "name": "$_id.name"
             }
         }
     ]
