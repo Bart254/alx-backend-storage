@@ -30,7 +30,7 @@ def replay(method: Callable):
     # print number of times method was called
     nb = client.get(name)
     nb = nb.decode("utf-8")
-    print(f'{name} was called {nb} times')
+    print(f'{name} was called {nb} times:')
 
     # print the inputs and outputs
     for input, output in zip(inputs, outputs):
