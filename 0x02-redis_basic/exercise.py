@@ -17,6 +17,44 @@ def count_calls(method: Callable) -> Callable:
     return incr
 
 
+def replay(method: Callable):
+    """ Accepts function as a parameter and prints an output to display its
+    parameters, number of times called and outpus
+    """
+    # create redis client
+    client = redis.Redis()
+
+    name = method.__qualname__
+    inputs = client.lrange(f'{name}:inputs', 0, -1)
+    outputs = client.lrange(f'{name}:outputs', 0, -1)
+    # print number of times method was called
+    nb = client.get(name)
+    nb = nb.decode("utf-8")
+    print(f'{name} was called {nb} times')
+
+    # print the inputs and outputs
+    for input, output in zip(inputs, outputs):
+        input = input.decode("utf-8")
+        output = output.decode("utf-8")
+        print(f'{name}(*{input}) -> {output}')
+
+
+def call_history(method: Callable) -> Callable:
+    """ A decorator function that stores inputs and outputs to a method
+    """
+    @wraps(method)
+    def queue_history(self, *args: List, **kwargs: Dict):
+        """ adds input and output to the end of a list
+        """
+        input_key: str = method.__qualname__ + ":inputs"
+        output_key: str = method.__qualname__ + ":outputs"
+        self._redis.rpush(input_key, str(args))
+        output = method(self, *args, **kwargs)
+        self._redis.rpush(output_key, output)
+        return output
+    return queue_history
+
+
 class Cache:
     """ Cache class for redis database
 
@@ -32,6 +70,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @call_history
     @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """ generates a key and stores data passed as argument
