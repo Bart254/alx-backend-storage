@@ -44,4 +44,4 @@ if __name__ == "__main__":
     ips = coll.aggregate(pipeline)
     print("IPs:")
     for ip in ips:
-        print(f'\t{ip["_id"]}\t{ip["count"]}')
+        print(f'\t{ip["_id"]}: {ip["count"]}')
