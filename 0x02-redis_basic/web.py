@@ -14,12 +14,11 @@ def get_page_decorator(method: Callable) -> Callable:
         """ Updates when a url is visited"""
         client = redis.Redis()
         key = f'count:{url}'
-        response = method(url)
-        if response.status_code == 200:
-            if not client.get(key):
-                client.setex(key, 10, 1)
-            else:
-                client.incr(key)
+        method(url)
+        if not client.get(key):
+            client.setex(key, 10, 1)
+        else:
+            client.incr(key)
     return get_url
 
 
